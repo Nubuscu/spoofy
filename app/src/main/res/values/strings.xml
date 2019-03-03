@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Spoofy</string>
+    <string name="login_text">Log in</string>
 </resources>
