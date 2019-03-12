@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Spoofy</string>
     <string name="login_text">Log in</string>
+  <string name="recent_listens">Recent Listens</string>
 </resources>
