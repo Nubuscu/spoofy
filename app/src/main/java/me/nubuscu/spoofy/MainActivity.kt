@@ -5,10 +5,10 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import kaaes.spotify.webapi.android.SpotifyApi
 import kaaes.spotify.webapi.android.SpotifyService
 
 class MainActivity : AppCompatActivity() {
@@ -19,27 +19,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var nvDrawer: NavigationView
-    private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        //setup spotify client
-//        token = intent.getStringExtra("spotifyToken")
-//        val api = SpotifyApi()
-//        api.setAccessToken(token)
-//        spotify = api.service
+        //setup spotify client
+        token = intent.getStringExtra("spotifyToken")
+        val api = SpotifyApi()
+        api.setAccessToken(token)
+        ClientManager.instance.spotify = api.service
 
         //setup toolbar
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         mDrawer = findViewById(R.id.drawer_layout)
         nvDrawer = findViewById(R.id.nvView)
-        setupDrawerContent(nvDrawer)
 
+        setupDrawerContent(nvDrawer)
         openFragment(MetricsFragment::class.java.newInstance() as Fragment)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item == null) {

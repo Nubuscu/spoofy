@@ -4,4 +4,7 @@
   <string name="recent_listens">Recent Listens</string>
   <string name="nav_metrics">Profile and Metrics</string>
   <string name="nav_discover_map">Discover Map</string>
+  <string name="profile_name">Profile Name</string>
+  <string name="drawer_open">Open Navigation Drawer</string>
+  <string name="drawer_close">Close Navigation Drawer</string>
 </resources>
