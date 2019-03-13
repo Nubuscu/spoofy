@@ -2,4 +2,6 @@
     <string name="app_name">Spoofy</string>
     <string name="login_text">Log in</string>
   <string name="recent_listens">Recent Listens</string>
+  <string name="nav_metrics">Profile and Metrics</string>
+  <string name="nav_discover_map">Discover Map</string>
 </resources>

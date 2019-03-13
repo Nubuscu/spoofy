@@ -2,75 +2,84 @@ package me.nubuscu.spoofy
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBar
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import kaaes.spotify.webapi.android.SpotifyApi
 import kaaes.spotify.webapi.android.SpotifyService
-import me.nubuscu.spoofy.classes.TimeRange
 
 class MainActivity : AppCompatActivity() {
+    //    spotify deps
     private lateinit var token: String
     private lateinit var spotify: SpotifyService
-    private lateinit var drawerLayout: DrawerLayout
+    //    nav bar things
+    private lateinit var mDrawer: DrawerLayout
+    private lateinit var toolbar: Toolbar
+    private lateinit var nvDrawer: NavigationView
+    private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        token = intent.getStringExtra("spotifyToken")
-        val api = SpotifyApi()
-        api.setAccessToken(token)
-        spotify = api.service
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+//        //setup spotify client
+//        token = intent.getStringExtra("spotifyToken")
+//        val api = SpotifyApi()
+//        api.setAccessToken(token)
+//        spotify = api.service
+
+        //setup toolbar
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
+        mDrawer = findViewById(R.id.drawer_layout)
+        nvDrawer = findViewById(R.id.nvView)
+        setupDrawerContent(nvDrawer)
+
+        openFragment(MetricsFragment::class.java.newInstance() as Fragment)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item == null) {
+            return super.onOptionsItemSelected(item)
         }
+        when (item.itemId) {
+            android.R.id.home -> {
+                mDrawer.openDrawer(GravityCompat.START)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-        drawerLayout = findViewById(R.id.drawer_layout)
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            // set item as selected to persist highlight
-            menuItem.isChecked = true
-            // close drawer when item is tapped
-            drawerLayout.closeDrawers()
-
-            // Add code here to update the UI based on the item selected
-            // For example, swap UI fragments here
-
+    private fun setupDrawerContent(navView: NavigationView) {
+        navView.setNavigationItemSelectedListener { menuItem ->
+            selectDrawerItem(menuItem)
             true
         }
-        populateListView(TimeRange.LONG_TERM, 10, 0)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                drawerLayout.openDrawer(GravityCompat.START)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    private fun selectDrawerItem(item: MenuItem?) {
+        //default to metrics page
+        var fragmentClass: Class<*> = MetricsFragment::class.java
+        when (item!!.itemId) {
+            R.id.nav_metrics_fragment -> fragmentClass = MetricsFragment::class.java
+            R.id.nav_discover_map -> fragmentClass = NetworkFragment::class.java
         }
+        val fragment = fragmentClass.newInstance() as Fragment
+        openFragment(fragment)
+
+        item.isChecked = true
+        mDrawer.closeDrawers()
     }
 
-    fun populateListView(range: TimeRange, limit: Int, offset: Int) {
-        val listView: ListView = findViewById(R.id.recent_list)
-        val adapter = ArrayAdapter<String>(
-            this,
-            android.R.layout.simple_list_item_1,
-            arrayOf("hello there", "second thing", "some third thing")
-        )
-        listView.adapter = adapter
-    }
+    private fun openFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
 
+    }
 //    fun findArtist(artistName: String) {
 //        /**
 //         * searches for the given string as an artist

@@ -2,10 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <group android:checkableBehavior="single">
     <item
-        android:id="@+id/nav_camera"
-        android:title="first"/>
+      android:id="@+id/nav_metrics_fragment"
+      android:title="@string/nav_metrics"
+      android:checked="true" />
     <item
-        android:id="@+id/nav_gallery"
-        android:title="second"/>
+      android:id="@+id/nav_discover_map"
+      android:title="@string/nav_discover_map" />
   </group>
 </menu>
