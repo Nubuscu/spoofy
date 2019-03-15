@@ -9,12 +9,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import kaaes.spotify.webapi.android.SpotifyApi
-import kaaes.spotify.webapi.android.SpotifyService
 
 class MainActivity : AppCompatActivity() {
     //    spotify deps
     private lateinit var token: String
-    private lateinit var spotify: SpotifyService
     //    nav bar things
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
@@ -28,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         token = intent.getStringExtra("spotifyToken")
         val api = SpotifyApi()
         api.setAccessToken(token)
-        ClientManager.instance.spotify = api.service
+        DataManager.instance.spotify = api.service
 
         //setup toolbar
         toolbar = findViewById(R.id.toolbar)
@@ -82,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 //    fun findArtist(artistName: String) {
 //        /**
-//         * searches for the given string as an artist
+//         * searches for the given value as an artist
 //         */
 //        spotify.searchArtists(artistName, object : Callback<ArtistsPager> {
 //            override fun success(t: ArtistsPager?, response: Response?) {
