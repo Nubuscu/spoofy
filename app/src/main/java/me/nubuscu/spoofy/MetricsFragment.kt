@@ -1,5 +1,7 @@
 package me.nubuscu.spoofy
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -18,6 +20,7 @@ import kaaes.spotify.webapi.android.models.Track
 import kaaes.spotify.webapi.android.models.UserPrivate
 import me.nubuscu.spoofy.view.ArtistAdapter
 import me.nubuscu.spoofy.view.SongAdapter
+import me.nubuscu.spoofy.viewmodel.MetricsViewModel
 import retrofit.Callback
 import retrofit.RetrofitError
 import retrofit.client.Response
@@ -26,6 +29,9 @@ class MetricsFragment : Fragment() {
 
     private lateinit var profileNameTextView: TextView
     private lateinit var metricsRecyclerView: RecyclerView
+    private lateinit var metricsViewModel: MetricsViewModel
+    private val spotify = DataManager.instance.spotify
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_metrics, container, false)
     }
@@ -37,18 +43,29 @@ class MetricsFragment : Fragment() {
         metricsRecyclerView = view.findViewById(R.id.metricsRecyclerView)
         metricsRecyclerView.setHasFixedSize(true)
         metricsRecyclerView.layoutManager = viewManager
+        metricsViewModel = ViewModelProviders.of(this).get(MetricsViewModel::class.java)
+        metricsViewModel.topArtists.observe(this, Observer { newArtists ->
+            if (newArtists != null) {
+                metricsRecyclerView.adapter = ArtistAdapter(newArtists)
+                (metricsRecyclerView.adapter as ArtistAdapter).notifyDataSetChanged()
+            }
+        })
+        metricsViewModel.topSongs.observe(this, Observer { newSongs ->
+            if (newSongs != null) {
+                metricsRecyclerView.adapter = SongAdapter(newSongs)
+                (metricsRecyclerView.adapter as SongAdapter).notifyDataSetChanged()
+            }
+        })
 
         val objectTypeSpinner = view.findViewById<Spinner>(R.id.objectTypeSpinner)
         val timeRangeSpinner = view.findViewById<Spinner>(R.id.timeRangeSpinner)
         val refreshButton = view.findViewById<Button>(R.id.refreshButton)
-        refreshButton.setOnClickListener {
-            //            populateTopStats()
-        }
+
+        refreshButton.setOnClickListener { populateTopStats(spotify, TimeRange.SHORT_TERM, ObjectType.ARTISTS) }
     }
 
     override fun onStart() {
         super.onStart()
-        val spotify = DataManager.instance.spotify
         populateUserInfo(spotify)
         populateTopStats(spotify, TimeRange.LONG_TERM, ObjectType.ARTISTS)
     }
@@ -73,8 +90,7 @@ class MetricsFragment : Fragment() {
             ObjectType.ARTISTS -> spotify.getTopArtists(params, object : Callback<Pager<Artist>> {
                 override fun success(artistPager: Pager<Artist>?, response: Response?) {
                     val list = artistPager?.items?.toList() ?: listOf()
-                    metricsRecyclerView.adapter = ArtistAdapter(list)
-                    (metricsRecyclerView.adapter as ArtistAdapter).notifyDataSetChanged()
+                    metricsViewModel.topArtists.postValue(list)
                 }
 
                 override fun failure(error: RetrofitError?) {
@@ -84,8 +100,7 @@ class MetricsFragment : Fragment() {
             ObjectType.SONGS -> spotify.getTopTracks(params, object : Callback<Pager<Track>> {
                 override fun success(trackPager: Pager<Track>?, response: Response?) {
                     val list = trackPager?.items?.toList() ?: listOf()
-                    metricsRecyclerView.adapter = SongAdapter(list)
-                    (metricsRecyclerView.adapter as SongAdapter).notifyDataSetChanged()
+                    metricsViewModel.topSongs.postValue(list)
                 }
 
                 override fun failure(error: RetrofitError?) {
