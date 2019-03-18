@@ -39,6 +39,7 @@ class SpotifyAuthActivity : AppCompatActivity() {
                 val openMainIntent = Intent(this, MainActivity::class.java)
                 openMainIntent.putExtra("spotifyToken", response.accessToken)
                 Log.d("auth", response.accessToken)
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                 startActivity(openMainIntent)
             }
             AuthenticationResponse.Type.ERROR -> {

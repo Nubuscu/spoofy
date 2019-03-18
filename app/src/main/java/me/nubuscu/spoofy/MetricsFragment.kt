@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
@@ -59,9 +60,30 @@ class MetricsFragment : Fragment() {
 
         val objectTypeSpinner = view.findViewById<Spinner>(R.id.objectTypeSpinner)
         val timeRangeSpinner = view.findViewById<Spinner>(R.id.timeRangeSpinner)
-        val refreshButton = view.findViewById<Button>(R.id.refreshButton)
 
-        refreshButton.setOnClickListener { populateTopStats(spotify, TimeRange.SHORT_TERM, ObjectType.ARTISTS) }
+        objectTypeSpinner.adapter = ArrayAdapter<ObjectType>(
+            context!!,
+            android.R.layout.simple_spinner_item,
+            ObjectType.values()
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        timeRangeSpinner.adapter = ArrayAdapter<TimeRange>(
+            context!!,
+            android.R.layout.simple_spinner_item,
+            TimeRange.values()
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        val refreshButton = view.findViewById<Button>(R.id.refreshButton)
+        refreshButton.setOnClickListener {
+            populateTopStats(
+                spotify,
+                timeRangeSpinner.selectedItem as TimeRange,
+                objectTypeSpinner.selectedItem as ObjectType
+            )
+        }
     }
 
     override fun onStart() {
