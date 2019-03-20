@@ -105,7 +105,7 @@ class MetricsFragment : Fragment() {
     }
 
     fun populateTopStats(spotify: SpotifyService, timeRange: TimeRange, type: ObjectType) {
-        val params: MutableMap<String, Any> = mutableMapOf("time_range" to timeRange.value)
+        val params: MutableMap<String, Any> = mutableMapOf("time_range" to timeRange.value, "limit" to 50)
 
         when (type) {
 

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kaaes.spotify.webapi.android.models.Artist
 import me.nubuscu.spoofy.R
+import me.nubuscu.spoofy.utils.DownloadImageTask
 
 
 class ArtistAdapter(val artists: List<Artist>) :
@@ -30,6 +31,7 @@ class ArtistAdapter(val artists: List<Artist>) :
     override fun onBindViewHolder(holder: ArtistViewHolder, i: Int) {
         holder.artistNameText.text = artists[i].name
 //        can't always find a bitmap image to use?
-//        holder.artistImage.setImageURI(Uri.parse(artists[i].images[0].url))
+        DownloadImageTask(holder.artistImage).execute(artists[i].images[0].url)
     }
 }
+

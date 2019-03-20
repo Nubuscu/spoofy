@@ -12,6 +12,7 @@ class SongAdapter(val songs: List<Track>) :
     RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
     class SongViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val songTitle: TextView = view.findViewById(R.id.songNameText)
+        val songArtist: TextView = view.findViewById(R.id.songArtistText)
     }
 
     override fun getItemCount(): Int = songs.size
@@ -24,5 +25,6 @@ class SongAdapter(val songs: List<Track>) :
 
     override fun onBindViewHolder(holder: SongViewHolder, i: Int) {
         holder.songTitle.text = songs[i].name
+        holder.songArtist.text = songs[i].artists.map { artist -> artist.name }.toString()
     }
 }
