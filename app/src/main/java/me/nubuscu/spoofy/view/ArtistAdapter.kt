@@ -30,8 +30,10 @@ class ArtistAdapter(val artists: List<Artist>) :
 
     override fun onBindViewHolder(holder: ArtistViewHolder, i: Int) {
         holder.artistNameText.text = artists[i].name
-//        can't always find a bitmap image to use?
-        DownloadImageTask(holder.artistImage).execute(artists[i].images[0].url)
+        val images = artists[i].images
+        if (images.isNotEmpty()) {
+            DownloadImageTask(holder.artistImage).execute(images[0].url)
+        }
     }
 }
 
