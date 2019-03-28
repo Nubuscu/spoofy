@@ -11,9 +11,14 @@ import me.nubuscu.spoofy.R
 import me.nubuscu.spoofy.utils.DownloadImageTask
 
 
-class ArtistAdapter(val artists: List<Artist>) :
+class ArtistAdapter(private val artists: List<Artist>) :
     RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
 
+    constructor(artists: List<Artist>, clickListener: (Artist) -> Unit) : this(artists) {
+        this.clickListener = clickListener
+    }
+
+    private var clickListener = { _: Artist -> }
     class ArtistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val artistImage: ImageView = view.findViewById(R.id.artistImage)
         val artistNameText: TextView = view.findViewById(R.id.artistNameText)
@@ -23,9 +28,15 @@ class ArtistAdapter(val artists: List<Artist>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             ArtistViewHolder {
+
+
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.artist_view_holder, parent, false)
-        return ArtistViewHolder(view)
+        val holder = ArtistViewHolder(view)
+        view.setOnClickListener {
+            clickListener(artists[holder.adapterPosition])
+        }
+        return holder
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, i: Int) {

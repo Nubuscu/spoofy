@@ -1,4 +1,4 @@
-package me.nubuscu.spoofy
+package me.nubuscu.spoofy.utils
 
 import kaaes.spotify.webapi.android.SpotifyService
 

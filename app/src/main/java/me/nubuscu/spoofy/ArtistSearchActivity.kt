@@ -1,5 +1,6 @@
 package me.nubuscu.spoofy
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import android.widget.Toast
 import kaaes.spotify.webapi.android.SpotifyService
 import kaaes.spotify.webapi.android.models.Artist
 import kaaes.spotify.webapi.android.models.ArtistsPager
+import me.nubuscu.spoofy.utils.DataManager
 import me.nubuscu.spoofy.view.ArtistAdapter
 import retrofit.Callback
 import retrofit.RetrofitError
@@ -27,17 +29,19 @@ class ArtistSearchActivity : AppCompatActivity() {
         spotify = DataManager.instance.spotify
 
 
-        val searchBar = findViewById<EditText>(R.id.searchBar)
-        val searchResultsList = findViewById<RecyclerView>(R.id.searchResultsList)
-        searchResultsList.layoutManager = LinearLayoutManager(this)
-
-        searchBar.setOnEditorActionListener { textView: TextView, i: Int, _ ->
-            if (i == EditorInfo.IME_ACTION_DONE) {
-                queryList(spotify, textView.text.toString(), searchResultsList)
-            }
-            false
-
+        val searchResultsList = findViewById<RecyclerView>(R.id.searchResultsList).apply {
+            layoutManager = LinearLayoutManager(context)
         }
+        val searchBar = findViewById<EditText>(R.id.searchBar).apply {
+            setOnEditorActionListener { textView: TextView, i: Int, _ ->
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    queryList(spotify, textView.text.toString(), searchResultsList)
+                }
+                false
+            }
+        }
+
+
         //TODO make onClick handler to return to previous fragment with an artist id
     }
 
@@ -49,17 +53,23 @@ class ArtistSearchActivity : AppCompatActivity() {
                     return
                 }
                 val artists = resultsPager.artists.items.toList()
-                out.adapter = ArtistAdapter(artists)
+                out.adapter = ArtistAdapter(artists) { a ->
+                    returnWithSelected(a)
+                }
             }
 
             override fun failure(error: RetrofitError?) {
                 Log.e("search", "unable to complete search", error)
             }
-
         })
     }
 
     private fun returnWithSelected(artist: Artist) {
         //TODO create an intent to click the back button and take this artist with you
+        val intent = Intent().apply {
+            putExtra("artistId", artist.id)
+        }
+        setResult(42, intent)
+        finish()
     }
 }

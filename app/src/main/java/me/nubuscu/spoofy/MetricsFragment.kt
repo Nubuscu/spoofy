@@ -19,6 +19,9 @@ import kaaes.spotify.webapi.android.models.Artist
 import kaaes.spotify.webapi.android.models.Pager
 import kaaes.spotify.webapi.android.models.Track
 import kaaes.spotify.webapi.android.models.UserPrivate
+import me.nubuscu.spoofy.enums.ObjectType
+import me.nubuscu.spoofy.enums.TimeRange
+import me.nubuscu.spoofy.utils.DataManager
 import me.nubuscu.spoofy.view.ArtistAdapter
 import me.nubuscu.spoofy.view.SongAdapter
 import me.nubuscu.spoofy.viewmodel.MetricsViewModel

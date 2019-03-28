@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import kaaes.spotify.webapi.android.SpotifyApi
+import me.nubuscu.spoofy.utils.DataManager
 
 class MainActivity : AppCompatActivity() {
     //    spotify deps

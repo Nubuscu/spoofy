@@ -1,4 +1,4 @@
-package me.nubuscu.spoofy
+package me.nubuscu.spoofy.enums
 
 /**
  * Enum for distinguishing music object types - artists, songs, etc.
