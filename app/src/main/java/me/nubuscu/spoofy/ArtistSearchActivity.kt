@@ -1,5 +1,6 @@
 package me.nubuscu.spoofy
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -40,9 +41,6 @@ class ArtistSearchActivity : AppCompatActivity() {
                 false
             }
         }
-
-
-        //TODO make onClick handler to return to previous fragment with an artist id
     }
 
     private fun queryList(spotify: SpotifyService, queryText: String, out: RecyclerView) {
@@ -65,11 +63,10 @@ class ArtistSearchActivity : AppCompatActivity() {
     }
 
     private fun returnWithSelected(artist: Artist) {
-        //TODO create an intent to click the back button and take this artist with you
         val intent = Intent().apply {
             putExtra("artistId", artist.id)
         }
-        setResult(42, intent)
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 }

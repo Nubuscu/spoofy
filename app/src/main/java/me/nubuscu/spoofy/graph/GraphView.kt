@@ -3,6 +3,7 @@ package me.nubuscu.spoofy.graph
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
@@ -10,6 +11,7 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var artistId: String? = null
 
     override fun onDraw(canvas: Canvas?) {
+        Log.d("FOO", "onDraw called")
         super.onDraw(canvas)
         if (canvas != null) {
             generateMap(canvas)
@@ -23,6 +25,7 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 //    }
 
     private fun generateMap(canvas: Canvas) {
+        Log.d("FOO", "generateMap called")
         if (artistId != null) {
             val test = Node(400, 400, "hello", canvas)
             val test2 = Node(400, 700, "there", canvas)

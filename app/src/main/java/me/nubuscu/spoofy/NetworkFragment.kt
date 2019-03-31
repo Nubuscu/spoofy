@@ -22,7 +22,7 @@ class NetworkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val openSearchButton = view.findViewById<Button>(R.id.openSearchButton)
+        val openSearchButton: Button = view.findViewById(R.id.openSearchButton)
         openSearchButton.setOnClickListener {
             val openSearchIntent = Intent(this.activity, ArtistSearchActivity::class.java)
             startActivityForResult(openSearchIntent, PICK_ARTIST_REQUEST)
@@ -33,7 +33,7 @@ class NetworkFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_ARTIST_REQUEST && resultCode == Activity.RESULT_OK) {
-            Log.d("debug", data.toString())
+            Log.d("FOO", data.toString())
             data?.let {
                 generateNetwork(data.getStringExtra("artistId"))
             }
@@ -41,7 +41,7 @@ class NetworkFragment : Fragment() {
     }
 
     fun generateNetwork(artistId: String) {
-        Log.d("debug", "generateNetwork called")
+        Log.d("FOO", "generateNetwork called")
         graphView.artistId = artistId
         graphView.invalidate()
     }
