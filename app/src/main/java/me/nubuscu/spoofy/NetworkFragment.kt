@@ -33,16 +33,18 @@ class NetworkFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_ARTIST_REQUEST && resultCode == Activity.RESULT_OK) {
-            Log.d("FOO", data.toString())
             data?.let {
-                generateNetwork(data.getStringExtra("artistId"))
+                generateNetwork(data.getStringExtra("artistId"), data.getStringExtra("artistName"))
             }
         }
     }
 
-    fun generateNetwork(artistId: String) {
+    private fun generateNetwork(artistId: String, artistName: String) {
         Log.d("FOO", "generateNetwork called")
-        graphView.artistId = artistId
-        graphView.invalidate()
+        graphView.apply {
+            this.artistId = artistId
+            this.artistName = artistName
+            graphView.invalidate()
+        }
     }
 }

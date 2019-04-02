@@ -65,6 +65,7 @@ class ArtistSearchActivity : AppCompatActivity() {
     private fun returnWithSelected(artist: Artist) {
         val intent = Intent().apply {
             putExtra("artistId", artist.id)
+            putExtra("artistName", artist.name)
         }
         setResult(Activity.RESULT_OK, intent)
         finish()

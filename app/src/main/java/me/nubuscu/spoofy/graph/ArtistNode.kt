@@ -31,7 +31,6 @@ class ArtistNode(val label: String, val canvas: Canvas, val artistId: String) {
     suspend fun addAdjacentToNetwork(network: ArtistNetwork, recursionDepth: Int) {
         Log.d("FOO", "adding to network, depth = $recursionDepth")
         val spotify = DataManager.instance.spotify
-        network.artists.add(this)
         if (recursionDepth > 0) {
             val artists = GlobalScope.async { spotify.getRelatedArtists(artistId)?.artists }.await()
             artists?.forEach { artist ->
@@ -42,26 +41,6 @@ class ArtistNode(val label: String, val canvas: Canvas, val artistId: String) {
             adjacentNodes.forEach { it.addAdjacentToNetwork(network, recursionDepth - 1) }
         }
     }
-
-//    fun getAdjacentNodes() {
-//        val spotify = DataManager.instance.spotify
-//        spotify.getRelatedArtists(artistId, object : Callback<Artists> {
-//            override fun success(artists: Artists?, response: Response?) {
-//                artists?.artists?.let { artistList ->
-//                    artistList.forEach { artist ->
-//                        adjacentNodes.add(ArtistNode(artist.name, canvas, artist.id))
-//                        Log.d("FOO", artist.name)
-//                    }
-//                }
-//            }
-//
-//            override fun failure(error: RetrofitError?) {
-//                Log.e("map", "failed to get related artists", error)
-//                adjacentNodes = ArrayList()
-//            }
-//
-//        })
-//    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

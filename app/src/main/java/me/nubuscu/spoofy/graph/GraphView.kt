@@ -6,20 +6,25 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
-class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+const val defaultRecursionDepth = 1
 
+class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var artistId: String? = null
+    var artistName: String = ""
 
     override fun onDraw(canvas: Canvas?) {
         Log.d("FOO", "onDraw called")
         super.onDraw(canvas)
         if (canvas != null) {
-            generateMap(canvas)
+            // needs to be blocking so the canvas doesn't get destroyed before I can draw on it
+            runBlocking {
+                //TODO show a spinny thing to indicate it's loading
+                generateMapAsync(canvas, defaultRecursionDepth).await()
+            }
         }
-
     }
 
 //    override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -27,21 +32,13 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 //        return super.onTouchEvent(event)
 //    }
 
-    private fun generateMap(canvas: Canvas) {
-        Log.d("FOO", "generateMap called")
+    private fun generateMapAsync(canvas: Canvas, numLayers: Int) = GlobalScope.async {
+        Log.d("FOO", "generateMapAsync called")
         if (artistId != null) {
             val network = ArtistNetwork(canvas)
-            GlobalScope.launch {
-                network.generateFromArtistAsync("asdf", artistId!!, 2).await()
-                network.draw()
-            }
-            network.artists.forEach { Log.d("FOO", it.label) }
-//            val test = Node(400, 400, "hello", canvas)
-//            val test2 = Node(400, 700, "there", canvas)
-//            val test3 = Edge(test, test2, canvas)
-//            test.draw()
-//            test2.draw()
-//            test3.draw()
+            network.generateFromArtistAsync(artistName, artistId!!, numLayers).await()
+            network.draw()
+//            network.artists.forEach { Log.d("FOO", it.label) }
         }
     }
 
