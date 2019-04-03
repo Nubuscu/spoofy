@@ -11,6 +11,8 @@
   <string name="time_range_long">Long Term</string>
   <string name="time_range_medium">Medium Term</string>
   <string name="time_range_short">Short Term</string>
-  <string name="search_hint">Search for an artist...</string>
-  <string name="openSearchButton">Search...</string>
+  <string name="search_hint">Search for an artist…</string>
+  <string name="openSearchButton">Search…</string>
+  <string name="obj_type_artists">Artists</string>
+  <string name="obj_type_songs">Songs</string>
 </resources>

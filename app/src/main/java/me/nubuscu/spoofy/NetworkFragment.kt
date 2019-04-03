@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import me.nubuscu.spoofy.graph.GraphView
 
 public const val PICK_ARTIST_REQUEST = 42
@@ -34,7 +35,10 @@ class NetworkFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_ARTIST_REQUEST && resultCode == Activity.RESULT_OK) {
             data?.let {
+                val loadingBar: ProgressBar? = view?.findViewById(R.id.loadingBar)
+                loadingBar?.let { loadingBar.visibility = View.VISIBLE }
                 generateNetwork(data.getStringExtra("artistId"), data.getStringExtra("artistName"))
+                loadingBar?.let { loadingBar.visibility = View.GONE }
             }
         }
     }
