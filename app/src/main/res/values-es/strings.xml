@@ -1,0 +1,18 @@
+<resources>
+  <string name="app_name">Spoofy</string>
+  <string name="login_text">Iniciar sesión</string>
+  <string name="recent_listens">Escuchas recientes</string>
+  <string name="nav_metrics">Perfil y métricas</string>
+  <string name="nav_discover_map">Descubrir Mapa</string>
+  <string name="profile_name">Nombre de perfil</string>
+  <string name="drawer_open">Abrir panel lateral de navegación</string>
+  <string name="drawer_close">Cerrar panel lateral de navegación</string>
+  <string name="refresh">Refrescar</string>
+  <string name="time_range_long">A largo plazo</string>
+  <string name="time_range_medium">Término medio</string>
+  <string name="time_range_short">Término corto</string>
+  <string name="search_hint">Búsqueda de un artista…</string>
+  <string name="openSearchButton">Buscar…</string>
+  <string name="obj_type_artists">Artistas</string>
+  <string name="obj_type_songs">Canciones</string>
+</resources>

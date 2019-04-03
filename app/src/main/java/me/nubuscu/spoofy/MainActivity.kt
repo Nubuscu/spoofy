@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.MenuItem
 import kaaes.spotify.webapi.android.SpotifyApi
 import me.nubuscu.spoofy.utils.DataManager
+import java.lang.ref.WeakReference
 
 class MainActivity : AppCompatActivity() {
     //    spotify deps
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         val api = SpotifyApi()
         api.setAccessToken(token)
         DataManager.instance.spotify = api.service
+        DataManager.instance.context = WeakReference(this)
         Log.d("FOO", "why are you like this?")
 
         //setup toolbar but only if it exists
