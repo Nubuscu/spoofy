@@ -3,12 +3,12 @@ package me.nubuscu.spoofy
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ProgressBar
 import me.nubuscu.spoofy.graph.GraphView
 
@@ -23,7 +23,7 @@ class NetworkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val openSearchButton: Button = view.findViewById(R.id.openSearchButton)
+        val openSearchButton: FloatingActionButton = view.findViewById(R.id.openSearchButton)
         openSearchButton.setOnClickListener {
             val openSearchIntent = Intent(this.activity, ArtistSearchActivity::class.java)
             startActivityForResult(openSearchIntent, PICK_ARTIST_REQUEST)
