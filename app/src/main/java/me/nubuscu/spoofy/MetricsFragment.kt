@@ -10,10 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import kaaes.spotify.webapi.android.SpotifyService
 import kaaes.spotify.webapi.android.models.Artist
 import kaaes.spotify.webapi.android.models.Pager
@@ -36,6 +33,11 @@ class MetricsFragment : Fragment() {
     private lateinit var metricsViewModel: MetricsViewModel
     private val spotify = DataManager.instance.spotify
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        metricsViewModel = ViewModelProviders.of(activity!!).get(MetricsViewModel::class.java)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_metrics, container, false)
     }
@@ -47,7 +49,6 @@ class MetricsFragment : Fragment() {
         metricsRecyclerView = view.findViewById(R.id.metricsRecyclerView)
         metricsRecyclerView.setHasFixedSize(true)
         metricsRecyclerView.layoutManager = viewManager
-        metricsViewModel = ViewModelProviders.of(this).get(MetricsViewModel::class.java)
         metricsViewModel.topArtists.observe(this, Observer { newArtists ->
             if (newArtists != null) {
                 metricsRecyclerView.adapter = ArtistAdapter(newArtists)
@@ -60,42 +61,61 @@ class MetricsFragment : Fragment() {
                 (metricsRecyclerView.adapter as SongAdapter).notifyDataSetChanged()
             }
         })
+        setupControls(view)
+    }
 
-        val objectTypeSpinner = view.findViewById<Spinner>(R.id.objectTypeSpinner)
-        val timeRangeSpinner = view.findViewById<Spinner>(R.id.timeRangeSpinner)
+    private fun setupControls(view: View) {
+        val objectTypeToggleButton = view.findViewById<ToggleButton>(R.id.objTypeToggle).apply {
+            isChecked = (metricsViewModel.selectedObjType == ObjectType.ARTISTS)
+            setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    metricsViewModel.selectedObjType = ObjectType.ARTISTS
 
-        objectTypeSpinner.adapter = ArrayAdapter<ObjectType>(
-            context!!,
-            android.R.layout.simple_spinner_item,
-            ObjectType.values()
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                } else {
+                    metricsViewModel.selectedObjType = ObjectType.SONGS
+                }
+            }
         }
-        timeRangeSpinner.adapter = ArrayAdapter<TimeRange>(
-            context!!,
-            android.R.layout.simple_spinner_item,
-            TimeRange.values()
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val timeRangeSpinner = view.findViewById<Spinner>(R.id.timeRangeSpinner).apply {
+            adapter = ArrayAdapter<TimeRange>(
+                context!!,
+                android.R.layout.simple_spinner_item,
+                TimeRange.values()
+            ).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val selectedItem = parent?.getItemAtPosition(position) as TimeRange
+                    metricsViewModel.selectedTimeRange = selectedItem
+                }
+            }
+            setSelection((adapter as ArrayAdapter<TimeRange>).getPosition(metricsViewModel.selectedTimeRange))
         }
 
         val refreshButton = view.findViewById<Button>(R.id.refreshButton)
         refreshButton.setOnClickListener {
             populateTopStats(
                 spotify,
-                timeRangeSpinner.selectedItem as TimeRange,
-                objectTypeSpinner.selectedItem as ObjectType
+                metricsViewModel.selectedTimeRange,
+                metricsViewModel.selectedObjType
             )
         }
+
     }
 
     override fun onStart() {
         super.onStart()
         populateUserInfo(spotify)
-        populateTopStats(spotify, TimeRange.LONG_TERM, ObjectType.ARTISTS)
+        populateTopStats(spotify, metricsViewModel.selectedTimeRange, metricsViewModel.selectedObjType)
     }
 
-    fun populateUserInfo(spotify: SpotifyService) {
+    private fun populateUserInfo(spotify: SpotifyService) {
         spotify.getMe(object : Callback<UserPrivate> {
             override fun success(t: UserPrivate?, response: Response?) {
                 profileNameTextView.text = t?.display_name
@@ -107,7 +127,7 @@ class MetricsFragment : Fragment() {
         })
     }
 
-    fun populateTopStats(spotify: SpotifyService, timeRange: TimeRange, type: ObjectType) {
+    private fun populateTopStats(spotify: SpotifyService, timeRange: TimeRange, type: ObjectType) {
         val params: MutableMap<String, Any> = mutableMapOf("time_range" to timeRange.value, "limit" to 50)
 
         when (type) {

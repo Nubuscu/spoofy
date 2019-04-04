@@ -8,7 +8,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
 import kaaes.spotify.webapi.android.SpotifyApi
 import me.nubuscu.spoofy.utils.DataManager
@@ -33,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         api.setAccessToken(token)
         DataManager.instance.spotify = api.service
         DataManager.instance.context = WeakReference(this)
-        Log.d("FOO", "why are you like this?")
 
         //setup toolbar but only if it exists
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
