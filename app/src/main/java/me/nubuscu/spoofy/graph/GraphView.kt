@@ -3,16 +3,14 @@ package me.nubuscu.spoofy.graph
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
-const val defaultRecursionDepth = 1
+const val defaultRecursionDepth = 2
 
 class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var artistId: String? = null
@@ -34,8 +32,9 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (this.artistId != artistId) {
             this.artistName = artistName
             this.artistId = artistId
-            runBlocking {
-                requestUpdateMap(defaultRecursionDepth).await()
+            GlobalScope.async {
+                requestUpdateMapAsync(defaultRecursionDepth).await()
+                invalidate()
             }
         }
 
@@ -45,7 +44,6 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mScaleDetector.onTouchEvent(event)
-        Log.d("debug", "this is a touch event")
         return true
     }
 
@@ -54,21 +52,20 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas?.apply {
             save()
             scale(mScaleFactor, mScaleFactor)
-            generateMap(canvas)
+            drawMap(canvas)
             restore()
         }
     }
 
 
-    private fun requestUpdateMap(numLayers: Int) = GlobalScope.async {
+    private fun requestUpdateMapAsync(numLayers: Int) = GlobalScope.async {
         mViewModel?.model = ArtistNetwork()
         mViewModel?.model!!.generateFromArtistAsync(artistName, artistId!!, numLayers).await()
     }
 
-    private fun generateMap(canvas: Canvas) {
+    private fun drawMap(canvas: Canvas) {
         if (artistId != null) {
             mViewModel?.model?.draw(canvas)
-//            network.artists.forEach { Log.d("FOO", it.label) }
         }
     }
 
