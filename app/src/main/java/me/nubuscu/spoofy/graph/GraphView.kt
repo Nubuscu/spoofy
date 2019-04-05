@@ -10,6 +10,7 @@ import android.view.View
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
 const val defaultRecursionDepth = 1
 
@@ -17,6 +18,7 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var artistId: String? = null
     private var artistName: String = ""
     private var mScaleFactor = 1f
+    var mViewModel: NetworkViewModel? = null
     private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             mScaleFactor *= detector.scaleFactor
@@ -32,7 +34,9 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         if (this.artistId != artistId) {
             this.artistName = artistName
             this.artistId = artistId
-
+            runBlocking {
+                requestUpdateMap(defaultRecursionDepth).await()
+            }
         }
 
     }
@@ -50,23 +54,20 @@ class GraphView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         canvas?.apply {
             save()
             scale(mScaleFactor, mScaleFactor)
-
-            // needs to be blocking so the canvas doesn't get destroyed before I can draw on it
-            runBlocking {
-                //TODO show a spinny thing to indicate it's loading
-                generateMapAsync(canvas, defaultRecursionDepth).await()
-            }
+            generateMap(canvas)
             restore()
         }
     }
 
-    private lateinit var network: ArtistNetwork
 
-    private fun generateMapAsync(canvas: Canvas, numLayers: Int) = GlobalScope.async {
+    private fun requestUpdateMap(numLayers: Int) = GlobalScope.async {
+        mViewModel?.model = ArtistNetwork()
+        mViewModel?.model!!.generateFromArtistAsync(artistName, artistId!!, numLayers).await()
+    }
+
+    private fun generateMap(canvas: Canvas) {
         if (artistId != null) {
-            network = ArtistNetwork(canvas)
-            network.generateFromArtistAsync(artistName, artistId!!, numLayers).await()
-            network.draw()
+            mViewModel?.model?.draw(canvas)
 //            network.artists.forEach { Log.d("FOO", it.label) }
         }
     }

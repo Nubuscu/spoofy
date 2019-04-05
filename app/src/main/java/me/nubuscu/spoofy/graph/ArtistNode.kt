@@ -9,7 +9,7 @@ import me.nubuscu.spoofy.utils.DataManager
 /**
  * class to hold the neighbour generation separate from drawing logic
  */
-class ArtistNode(val label: String, val canvas: Canvas, val artistId: String) {
+class ArtistNode(val label: String, val artistId: String) {
 
     private var adjacentNodes: MutableSet<ArtistNode> = HashSet()
     private lateinit var node: Node
@@ -18,7 +18,7 @@ class ArtistNode(val label: String, val canvas: Canvas, val artistId: String) {
      * display the underlying visible node and draw edges to adjacent nodes
      * does not actually draw the other nodes, just the edge.
      */
-    fun draw(x: Int, y: Int) {
+    fun draw(canvas: Canvas, x: Int, y: Int) {
         node = Node(x, y, label, canvas)
         node.draw()
 
@@ -34,7 +34,7 @@ class ArtistNode(val label: String, val canvas: Canvas, val artistId: String) {
         if (recursionDepth > 0) {
             val artists = GlobalScope.async { spotify.getRelatedArtists(artistId)?.artists }.await()
             artists?.forEach { artist ->
-                val newNode = ArtistNode(artist.name, canvas, artist.id)
+                val newNode = ArtistNode(artist.name, artist.id)
                 network.artists.add(newNode)
                 adjacentNodes.add(newNode)
             }

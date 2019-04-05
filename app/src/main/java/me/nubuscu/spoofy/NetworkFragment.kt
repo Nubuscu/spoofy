@@ -1,6 +1,7 @@
 package me.nubuscu.spoofy
 
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import me.nubuscu.spoofy.graph.GraphView
+import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
 public const val PICK_ARTIST_REQUEST = 42
 
@@ -29,6 +31,7 @@ class NetworkFragment : Fragment() {
         }
 
         graphView = view.findViewById(R.id.graphView)
+        graphView.mViewModel = ViewModelProviders.of(activity!!).get(NetworkViewModel::class.java)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
