@@ -8,21 +8,24 @@ import kotlinx.coroutines.async
 class ArtistNetwork(private val canvas: Canvas) {
 
     val artists: MutableSet<ArtistNode> = HashSet()
-    lateinit var centralNode: ArtistNode
+    var centralNode: ArtistNode? = null
 
-    fun generateFromArtistAsync(artistName: String, artistId: String, numLayers: Int) = GlobalScope.async{
-        Log.d("FOO", "generateFromArtist called")
-        centralNode = ArtistNode(artistName, canvas, artistId)
-        centralNode.addAdjacentToNetwork(this@ArtistNetwork, numLayers)
+    fun generateFromArtistAsync(artistName: String, artistId: String, numLayers: Int) = GlobalScope.async {
+        if (centralNode?.artistId == artistId) {
+            return@async
+        } else {
+            Log.d("debug", "running adjacency request thing")
+            centralNode = ArtistNode(artistName, canvas, artistId)
+            centralNode!!.addAdjacentToNetwork(this@ArtistNetwork, numLayers)
+        }
     }
 
     fun draw() {
         val centreX = canvas.width / 2
         val centreY = canvas.height / 2
-        centralNode.draw(centreX, centreY)
+        centralNode!!.draw(centreX, centreY)
         // TODO generate a series of co-ordinates to draw other nodes at
         for (x in artists zip makeCoOrds(centreX, centreY, artists.size, 300)) {
-            Log.d("FOO", "${x.first.label}, ${x.second.first}/${x.second.second}")
             x.first.draw(x.second.first, x.second.second)
         }
 //        artists.forEachIndexed { i, a ->
@@ -45,7 +48,6 @@ class ArtistNetwork(private val canvas: Canvas) {
     private fun makeCoOrd(baseX: Int, baseY: Int, i: Int, numPoints: Int, radius: Int): Pair<Int, Int> {
         val x = baseX + radius * Math.cos(2 * Math.PI * i / numPoints)
         val y = baseY + radius * Math.sin(2 * Math.PI * i / numPoints)
-        Log.d("NUMBERS", "$i/$numPoints ... $x/$y")
         return Pair(x.toInt(), y.toInt())
 
     }

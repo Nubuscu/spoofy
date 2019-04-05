@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,11 +43,10 @@ class NetworkFragment : Fragment() {
     }
 
     private fun generateNetwork(artistId: String, artistName: String) {
-        Log.d("FOO", "generateNetwork called")
         graphView.apply {
-            this.artistId = artistId
-            this.artistName = artistName
-            graphView.invalidate()
+            updateCentreArtist(artistId, artistName)
+            invalidate()
+
         }
     }
 }
