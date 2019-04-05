@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-const val defaultRecursionDepth = 2
+const val defaultRecursionDepth = 1
 
 class GraphView(context: Context, attrs: AttributeSet) : MovableView(context, attrs) {
     private var artistId: String? = null
