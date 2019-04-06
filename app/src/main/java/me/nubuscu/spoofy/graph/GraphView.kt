@@ -8,7 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
-const val defaultRecursionDepth = 2
+const val defaultRecursionDepth = 1
 
 class GraphView(context: Context, attrs: AttributeSet) : MovableView(context, attrs) {
     private var artistId: String? = null
