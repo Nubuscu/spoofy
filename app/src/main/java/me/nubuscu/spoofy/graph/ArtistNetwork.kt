@@ -5,7 +5,7 @@ import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class ArtistNetwork() {
+class ArtistNetwork {
 
     val artists: MutableSet<ArtistNode> = HashSet()
     var centralNode: ArtistNode? = null
@@ -21,16 +21,27 @@ class ArtistNetwork() {
     }
 
     fun draw(canvas: Canvas, scaleFactor: Float) {
+        val hasBeenDrawn: MutableSet<ArtistNode> = HashSet()
         val centreX = canvas.width / 2
         val centreY = canvas.height / 2
         centralNode!!.draw(canvas, centreX, centreY, scaleFactor)
+        hasBeenDrawn.add(centralNode!!)
         // TODO generate a series of co-ordinates to draw other nodes at
-        for (x in artists zip makeCoOrds(centreX, centreY, artists.size, 300)) {
-            x.first.draw(canvas, x.second.first, x.second.second, scaleFactor)
+        for (node in hasBeenDrawn) {
+            drawRing(canvas, node.adjacentNodes, hasBeenDrawn, Pair(node.x, node.y), scaleFactor, 300)
+//            for (adj in node.adjacentNodes) {
+//                Edge(adj.node, node.node, canvas).draw()
+//            }
         }
-//        artists.forEachIndexed { i, a ->
-//            a.draw(400, 400)
-//        }
+    }
+
+    fun drawRing(canvas: Canvas, toDraw: Set<ArtistNode>, beenDrawn: MutableSet<ArtistNode>, centreLocation: Pair<Int, Int>, scaleFactor: Float, radius: Int) {
+        for ((artist, loc) in toDraw zip  makeCoOrds(centreLocation.first, centreLocation.second, toDraw.size, radius)) {
+            if (artist !in beenDrawn) {
+                artist.draw(canvas, loc.first, loc.second, scaleFactor)
+                beenDrawn.add(artist)
+            }
+        }
     }
 
     /**

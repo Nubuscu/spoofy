@@ -9,7 +9,7 @@ class Edge(val start: Node, val end: Node, val canvas: Canvas) : Path() {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         color = Color.BLUE
-        strokeWidth = 10.0F
+        strokeWidth = 5.0F
     }
 
     fun draw() {

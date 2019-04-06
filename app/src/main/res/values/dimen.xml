@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="graphFontSize">20sp</dimen>
+    <dimen name="graphFontSize">10sp</dimen>
+    <dimen name="nodeDotRadius">5sp</dimen>
 </resources>

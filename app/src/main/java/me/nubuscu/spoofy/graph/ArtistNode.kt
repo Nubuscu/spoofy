@@ -11,14 +11,20 @@ import me.nubuscu.spoofy.utils.DataManager
  */
 class ArtistNode(val label: String, val artistId: String) {
 
-    private var adjacentNodes: MutableSet<ArtistNode> = HashSet()
-    private lateinit var node: Node
+    var adjacentNodes: MutableSet<ArtistNode> = HashSet()
+    lateinit var node: Node
+    var x: Int = 0
+    var y : Int = 0
+
+
 
     /**
      * display the underlying visible node and draw edges to adjacent nodes
      * does not actually draw the other nodes, just the edge.
      */
     fun draw(canvas: Canvas, x: Int, y: Int, scaleFactor: Float) {
+        this.x = x
+        this.y = y
         node = Node(x, y, label, canvas)
         node.draw(scaleFactor)
 
