@@ -3,6 +3,7 @@ package me.nubuscu.spoofy.graph
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import me.nubuscu.spoofy.viewmodel.NetworkViewModel
@@ -33,10 +34,8 @@ class GraphView(context: Context, attrs: AttributeSet) : MovableView(context, at
         mViewModel?.model!!.generateFromArtistAsync(artistName, artistId!!, numLayers).await()
     }
 
-    override var onDrawFunction = { canvas: Canvas, scaleFactor: Float ->
-        if (artistId != null) {
-            mViewModel?.model?.draw(canvas, scaleFactor)
-        }
+    override var onDrawFunction: (Canvas, Float) -> Unit = { canvas, scaleFactor ->
+        mViewModel?.model?.draw(canvas, scaleFactor)
     }
 
 
