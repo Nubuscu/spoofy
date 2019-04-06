@@ -10,7 +10,7 @@ import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
 open class MovableView(context: Context, attrs: AttributeSet): View(context, attrs) {
 
-    open var onDrawFunction: (canvas: Canvas) -> Unit = {} // override this to set what gets drawn
+    open var onDrawFunction: (canvas: Canvas, scaleFactor: Float) -> Unit = {_, _ -> } // override this to set what gets drawn
 
     private var mLastTouchX = 0f
     private var mLastTouchY = 0f
@@ -19,7 +19,6 @@ open class MovableView(context: Context, attrs: AttributeSet): View(context, att
     private var mPosX = 0f
     private var mPosY = 0f
     private var mScaleFactor = 1f
-    var mViewModel: NetworkViewModel? = null
     private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             mScaleFactor *= detector.scaleFactor
@@ -69,7 +68,7 @@ open class MovableView(context: Context, attrs: AttributeSet): View(context, att
             save()
             translate(mPosX, mPosY)
             scale(mScaleFactor, mScaleFactor)
-            onDrawFunction(canvas)
+            onDrawFunction(canvas, mScaleFactor)
             restore()
         }
     }

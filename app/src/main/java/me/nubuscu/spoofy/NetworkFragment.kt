@@ -13,7 +13,7 @@ import android.widget.ProgressBar
 import me.nubuscu.spoofy.graph.GraphView
 import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
-public const val PICK_ARTIST_REQUEST = 42
+const val PICK_ARTIST_REQUEST = 42
 
 class NetworkFragment : Fragment() {
     lateinit var graphView: GraphView
@@ -31,7 +31,7 @@ class NetworkFragment : Fragment() {
         }
 
         graphView = view.findViewById(R.id.graphView)
-        graphView.mViewModel = ViewModelProviders.of(activity!!).get(NetworkViewModel::class.java)
+        graphView.mViewModel = ViewModelProviders.of(this.activity!!).get(NetworkViewModel::class.java)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

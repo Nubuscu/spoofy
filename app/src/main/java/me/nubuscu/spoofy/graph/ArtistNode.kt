@@ -18,9 +18,9 @@ class ArtistNode(val label: String, val artistId: String) {
      * display the underlying visible node and draw edges to adjacent nodes
      * does not actually draw the other nodes, just the edge.
      */
-    fun draw(canvas: Canvas, x: Int, y: Int) {
+    fun draw(canvas: Canvas, x: Int, y: Int, scaleFactor: Float) {
         node = Node(x, y, label, canvas)
-        node.draw()
+        node.draw(scaleFactor)
 
     }
 

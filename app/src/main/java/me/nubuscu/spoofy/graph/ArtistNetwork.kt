@@ -20,13 +20,13 @@ class ArtistNetwork() {
         }
     }
 
-    fun draw(canvas: Canvas) {
+    fun draw(canvas: Canvas, scaleFactor: Float) {
         val centreX = canvas.width / 2
         val centreY = canvas.height / 2
-        centralNode!!.draw(canvas, centreX, centreY)
+        centralNode!!.draw(canvas, centreX, centreY, scaleFactor)
         // TODO generate a series of co-ordinates to draw other nodes at
         for (x in artists zip makeCoOrds(centreX, centreY, artists.size, 300)) {
-            x.first.draw(canvas, x.second.first, x.second.second)
+            x.first.draw(canvas, x.second.first, x.second.second, scaleFactor)
         }
 //        artists.forEachIndexed { i, a ->
 //            a.draw(400, 400)

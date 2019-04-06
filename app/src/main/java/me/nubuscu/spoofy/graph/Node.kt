@@ -19,8 +19,9 @@ open class Node(x: Int = 0, y: Int = 0, val label: String, val canvas: Canvas) :
 
     private val radius = 15.0F
 
-    fun draw() {
+    fun draw(scaleFactor: Float) {
         canvas.drawCircle(x.toFloat(), y.toFloat(), radius, shapePaint)
+        textPaint.textSize = textPaint.textSize/scaleFactor
         canvas.drawText(label, x.toFloat(), y.toFloat() - radius, textPaint)
     }
 }

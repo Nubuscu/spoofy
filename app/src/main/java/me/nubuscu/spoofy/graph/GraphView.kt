@@ -5,12 +5,14 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import me.nubuscu.spoofy.viewmodel.NetworkViewModel
 
 const val defaultRecursionDepth = 1
 
 class GraphView(context: Context, attrs: AttributeSet) : MovableView(context, attrs) {
     private var artistId: String? = null
     private var artistName: String = ""
+    var mViewModel: NetworkViewModel? = null
 
 
     fun updateCentreArtist(artistId: String, artistName: String) {
@@ -31,9 +33,9 @@ class GraphView(context: Context, attrs: AttributeSet) : MovableView(context, at
         mViewModel?.model!!.generateFromArtistAsync(artistName, artistId!!, numLayers).await()
     }
 
-    override var onDrawFunction = { canvas: Canvas ->
+    override var onDrawFunction = { canvas: Canvas, scaleFactor: Float ->
         if (artistId != null) {
-            mViewModel?.model?.draw(canvas)
+            mViewModel?.model?.draw(canvas, scaleFactor)
         }
     }
 
