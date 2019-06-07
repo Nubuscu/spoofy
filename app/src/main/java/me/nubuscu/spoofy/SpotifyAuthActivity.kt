@@ -10,6 +10,7 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import me.nubuscu.spoofy.BuildConfig.SPOTIFY_ID
 
+const val request_code = 1337
 const val redirect_url = "spoofy://callback"
 const val client_id = SPOTIFY_ID
 
@@ -22,32 +23,29 @@ class SpotifyAuthActivity : AppCompatActivity() {
         builder.setScopes(scopes)
 
         val request = builder.build()
-        AuthenticationClient.openLoginInBrowser(this, request)
+        AuthenticationClient.openLoginActivity(this, request_code, request)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent?.data == null) {
-            return
-        }
-        val uri = intent.data
-        val response = AuthenticationResponse.fromUri(uri)
-
-        when (response.type) {
-            AuthenticationResponse.Type.TOKEN -> {
-                Log.d("auth", "successfully retrieved token")
-                val openMainIntent = Intent(this, MainActivity::class.java)
-                openMainIntent.putExtra("spotifyToken", response.accessToken)
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                startActivity(openMainIntent)
-            }
-            AuthenticationResponse.Type.ERROR -> {
-                Log.e("auth", "failed to get token")
-                Toast.makeText(this, "Failed to log in. Please try again", Toast.LENGTH_LONG).show()
-            }
-            else -> {
-                Log.e("auth", "something else happened entirely?")
-                Toast.makeText(this, "An error occurred", Toast.LENGTH_SHORT).show()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == request_code) {
+            val response = AuthenticationClient.getResponse(resultCode, data)
+            when (response.type) {
+                AuthenticationResponse.Type.TOKEN -> {
+                    Log.d("auth", "successfully retrieved token")
+                    val openMainIntent = Intent(this, MainActivity::class.java)
+                    openMainIntent.putExtra("spotifyToken", response.accessToken)
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                    startActivity(openMainIntent)
+                }
+                AuthenticationResponse.Type.ERROR -> {
+                    Log.e("auth", "failed to get token")
+                    Toast.makeText(this, "Failed to log in. Please try again", Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    Log.e("auth", "something else happened entirely?")
+                    Toast.makeText(this, "An error occurred ${response.type.name}", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

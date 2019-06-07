@@ -33,6 +33,9 @@
       </intent-filter>
     </activity>
     <activity android:name=".ArtistSearchActivity" />
+    <activity
+      android:name="com.spotify.sdk.android.authentication.LoginActivity"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
   </application>
 
 </manifest>
