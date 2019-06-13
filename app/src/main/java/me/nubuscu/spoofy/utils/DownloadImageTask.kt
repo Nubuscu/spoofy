@@ -6,9 +6,10 @@ import android.os.AsyncTask
 import android.util.Log
 import android.widget.ImageView
 import java.io.InputStream
+import java.lang.ref.WeakReference
 import java.net.URL
 
-class DownloadImageTask(val target: ImageView) : AsyncTask<String, Void, Bitmap?>() {
+class DownloadImageTask(val target: WeakReference<ImageView>) : AsyncTask<String, Void, Bitmap?>() {
     override fun doInBackground(vararg urls: String?): Bitmap? {
         val url: String? = urls[0]
         var bmp: Bitmap? = null
@@ -22,7 +23,7 @@ class DownloadImageTask(val target: ImageView) : AsyncTask<String, Void, Bitmap?
     }
 
     override fun onPostExecute(result: Bitmap?) {
-        target.setImageBitmap(result)
+        target.get()?.setImageBitmap(result)
     }
 
 }

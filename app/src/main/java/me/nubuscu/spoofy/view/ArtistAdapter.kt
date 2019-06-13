@@ -9,6 +9,7 @@ import android.widget.TextView
 import kaaes.spotify.webapi.android.models.Artist
 import me.nubuscu.spoofy.R
 import me.nubuscu.spoofy.utils.DownloadImageTask
+import java.lang.ref.WeakReference
 
 
 class ArtistAdapter(private val artists: List<Artist>) :
@@ -42,8 +43,9 @@ class ArtistAdapter(private val artists: List<Artist>) :
     override fun onBindViewHolder(holder: ArtistViewHolder, i: Int) {
         holder.artistNameText.text = artists[i].name
         val images = artists[i].images
+        holder.artistImage.setImageBitmap(null)
         if (images.isNotEmpty()) {
-            DownloadImageTask(holder.artistImage).execute(images[0].url)
+            DownloadImageTask(WeakReference(holder.artistImage)).execute(images[0].url)
         }
     }
 }

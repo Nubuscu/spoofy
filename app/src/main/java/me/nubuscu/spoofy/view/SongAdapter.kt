@@ -9,6 +9,7 @@ import android.widget.TextView
 import kaaes.spotify.webapi.android.models.Track
 import me.nubuscu.spoofy.R
 import me.nubuscu.spoofy.utils.DownloadImageTask
+import java.lang.ref.WeakReference
 
 class SongAdapter(val songs: List<Track>) :
     RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
@@ -28,10 +29,11 @@ class SongAdapter(val songs: List<Track>) :
 
     override fun onBindViewHolder(holder: SongViewHolder, i: Int) {
         holder.songTitle.text = songs[i].name
-        holder.songArtist.text = songs[i].artists.map { artist -> artist.name }.toString()
+        holder.songArtist.text = songs[i].artists.joinToString(", ") { it.name }
+        holder.songAlbumImage.setImageBitmap(null)
         val images = songs[i].album.images
         if (images.isNotEmpty()) {
-            DownloadImageTask(holder.songAlbumImage).execute(images[0].url)
+            DownloadImageTask(WeakReference(holder.songAlbumImage)).execute(images[0].url)
         }
     }
 }
