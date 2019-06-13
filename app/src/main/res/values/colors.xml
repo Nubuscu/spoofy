@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="spotifyGreen">#1DB954</color>
+    <color name="spotifyBlack">#191414</color>
+    <color name="spotifyWhite">#FFFFFF</color>
+    <color name="grey">#8c7e7e</color>
+    <color name="purple">#b57fdc</color>
+    <color name="purple_dark">#523269</color>
 </resources>

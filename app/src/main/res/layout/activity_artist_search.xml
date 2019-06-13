@@ -26,6 +26,7 @@
     android:ems="10"
     android:hint="@string/search_hint"
     android:inputType="textPersonName"
+    android:textColor="@color/spotifyWhite"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />

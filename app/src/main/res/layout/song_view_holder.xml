@@ -2,25 +2,26 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content">
+  android:layout_height="wrap_content"
+  android:background="@color/spotifyBlack">
+
+  <ImageView
+      android:id="@+id/songAlbumImage"
+      android:layout_width="128sp"
+      android:layout_height="128sp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@android:color/darker_gray" />
 
   <View
     android:id="@+id/divider"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="?android:attr/listDivider"
+    android:background="@color/grey"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
-
-  <ImageView
-    android:id="@+id/songAlbumImage"
-    android:layout_width="128sp"
-    android:layout_height="128sp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@android:color/darker_gray" />
 
   <TextView
     android:id="@+id/songNameText"
@@ -31,6 +32,7 @@
     android:layout_marginEnd="8dp"
     android:text=""
     android:textSize="14sp"
+    android:textColor="@color/spotifyWhite"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@+id/songAlbumImage"
     app:layout_constraintTop_toBottomOf="@+id/divider" />
@@ -44,6 +46,7 @@
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
     android:textSize="14sp"
+    android:textColor="@color/spotifyWhite"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@+id/songAlbumImage"
@@ -53,7 +56,7 @@
     android:id="@+id/divider2"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="?android:attr/listDivider"
+    android:background="@color/grey"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />

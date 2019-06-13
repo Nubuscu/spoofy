@@ -3,29 +3,31 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/linearLayout"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content">
+  android:layout_height="wrap_content"
+  android:background="@color/spotifyBlack">
+
+  <ImageView
+      android:id="@+id/artistImage"
+      android:layout_width="128sp"
+      android:layout_height="128sp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/artistNameText"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@android:color/darker_gray" />
 
   <View
     android:id="@+id/divider3"
     android:layout_width="0dp"
     android:layout_height="1dp"
     android:layout_marginBottom="4dp"
-    android:background="?android:attr/listDivider"
+    android:background="@color/grey"
     app:layout_constraintBottom_toTopOf="@+id/artistImage"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent" />
 
-  <ImageView
-    android:id="@+id/artistImage"
-    android:layout_width="128sp"
-    android:layout_height="128sp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/artistNameText"
-    app:layout_constraintHorizontal_bias="0.5"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@android:color/darker_gray" />
 
   <TextView
     android:id="@+id/artistNameText"
@@ -35,6 +37,7 @@
     android:layout_marginBottom="8dp"
     android:text=""
     android:textSize="14sp"
+    android:textColor="@color/spotifyWhite"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.5"
@@ -46,7 +49,7 @@
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_marginTop="4dp"
-    android:background="?android:attr/listDivider"
+      android:background="@color/grey"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/artistImage" />
 
