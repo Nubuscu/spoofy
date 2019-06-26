@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/purple</item>
         <item name="colorPrimaryDark">@color/purple_dark</item>
@@ -11,5 +11,6 @@
         <item name="colorControlHighlight">@color/purple_dark</item>
         <item name="android:windowBackground">@color/spotifyBlack</item>
         <item name="android:textColorPrimary">@color/spotifyWhite</item>
+    <item name="android:navigationBarColor">@color/spotifyBlack</item>
     </style>
 </resources>

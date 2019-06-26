@@ -3,7 +3,7 @@
     <string name="login_text">Log in</string>
   <string name="recent_listens">Recent Listens</string>
   <string name="nav_metrics">Profile and Metrics</string>
-  <string name="nav_discover_map">Discover Map</string>
+  <string name="nav_discover_map">Discover Map (Beta)</string>
   <string name="profile_name">Profile Name</string>
   <string name="drawer_open">Open Navigation Drawer</string>
   <string name="drawer_close">Close Navigation Drawer</string>
@@ -15,4 +15,12 @@
   <string name="openSearchButton">Search…</string>
   <string name="obj_type_artists">Artists</string>
   <string name="obj_type_songs">Songs</string>
+  <string name="reccs_label">I would like recommendations for:</string>
+  <string name="song_rec">A song</string>
+  <string name="genre_rec">A Genre</string>
+  <string name="playlist_rec">A Playlist</string>
+  <string name="artist_rec">An Artist</string>
+  <string name="nav_recommendations">Recommendations</string>
+  <string name="makePlaylist">Make Playlist</string>
+  <string name="selectArtist">Search Artists</string>
 </resources>

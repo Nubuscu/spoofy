@@ -6,6 +6,9 @@
       android:title="@string/nav_metrics"
       android:checked="true" />
     <item
+      android:id="@+id/nav_recommendations_fragment"
+      android:title="@string/nav_recommendations" />
+    <item
       android:id="@+id/nav_discover_map"
       android:title="@string/nav_discover_map" />
   </group>

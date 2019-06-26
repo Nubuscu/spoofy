@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import kaaes.spotify.webapi.android.SpotifyApi
+import me.nubuscu.spoofy.recommendations.RecommendationsFragment
 import me.nubuscu.spoofy.utils.DataManager
 import java.lang.ref.WeakReference
 
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         when (item!!.itemId) {
             R.id.nav_metrics_fragment -> fragmentClass = MetricsFragment::class.java
             R.id.nav_discover_map -> fragmentClass = NetworkFragment::class.java
+            R.id.nav_recommendations_fragment -> fragmentClass = RecommendationsFragment::class.java
         }
         val fragment = fragmentClass.newInstance() as Fragment
         openFragment(fragment)
