@@ -11,46 +11,21 @@
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
-    android:text="@string/reccs_label"
+    android:text="@string/select_playlist"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
-  <android.support.design.widget.TabLayout
-    android:id="@+id/rec_types_tab_layout"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-  <android.support.v4.view.ViewPager
-    android:id="@+id/rec_types_view_pager"
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/playlistList"
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
-    app:layout_constraintBottom_toTopOf="@+id/makePlaylistButton"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/rec_types_tab_layout">
-
-  </android.support.v4.view.ViewPager>
-
-  <Button
-    android:id="@+id/makePlaylistButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="8dp"
-    android:text="@string/makePlaylist"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textView" />
 </android.support.constraint.ConstraintLayout>

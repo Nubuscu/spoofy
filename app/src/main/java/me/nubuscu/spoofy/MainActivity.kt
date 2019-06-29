@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import kaaes.spotify.webapi.android.SpotifyApi
-import me.nubuscu.spoofy.recommendations.RecommendationsFragment
 import me.nubuscu.spoofy.utils.DataManager
 import java.lang.ref.WeakReference
 
