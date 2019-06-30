@@ -12,7 +12,7 @@ import me.nubuscu.spoofy.utils.DownloadImageTask
 import java.lang.ref.WeakReference
 
 class PlaylistAdapter(
-    private val playlists: List<PlaylistSimple>,
+    val playlists: MutableList<PlaylistSimple>,
     private val clickListener: (PlaylistSimple) -> Unit
 ) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
