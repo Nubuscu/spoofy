@@ -35,9 +35,13 @@ class PlaylistAdapter(
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, i: Int) {
         holder.image.setImageBitmap(null)
-        DownloadImageTask(WeakReference(holder.image)).execute(
-            playlists[i].images[0].url
-        )
+        try {
+            DownloadImageTask(WeakReference(holder.image)).execute(
+                playlists[i].images[0].url
+            )
+        } catch (e: IndexOutOfBoundsException) {
+            //playlist has no image, do nothing
+        }
         holder.title.text = playlists[i].name
     }
 

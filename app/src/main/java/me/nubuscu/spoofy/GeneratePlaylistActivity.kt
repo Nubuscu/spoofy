@@ -1,14 +1,20 @@
 package me.nubuscu.spoofy
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.widget.Button
 import android.widget.ProgressBar
+import kaaes.spotify.webapi.android.SpotifyError
 import kaaes.spotify.webapi.android.models.Pager
 import kaaes.spotify.webapi.android.models.PlaylistTrack
 import kaaes.spotify.webapi.android.models.Recommendations
+import kaaes.spotify.webapi.android.models.Track
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.nubuscu.spoofy.utils.DataManager
@@ -19,8 +25,16 @@ import retrofit.client.Response
 import kotlin.random.Random
 
 class GeneratePlaylistActivity : AppCompatActivity() {
+    private val playlistName = "Spoofy loves you too"
     private val spotify = DataManager.instance.spotify
-    private val songs: MutableList<PlaylistTrack> = mutableListOf() //accumulate all the songs in the playlist
+    private val sourceSongs: MutableList<PlaylistTrack> = mutableListOf() //accumulate all the songs in the playlist
+    private var recommendedSongs: MutableList<Track> = mutableListOf()
+        set(value) {
+            field = value
+            recommendationsList.adapter = SongAdapter(field)
+            (recommendationsList.adapter as SongAdapter).notifyDataSetChanged()
+            loadingProgressBar.visibility = ProgressBar.GONE
+        }
     private lateinit var recommendationsList: RecyclerView
     private lateinit var loadingProgressBar: ProgressBar
 
@@ -31,10 +45,14 @@ class GeneratePlaylistActivity : AppCompatActivity() {
         loadingProgressBar = findViewById(R.id.gp_progress_bar)
         loadingProgressBar.visibility = ProgressBar.VISIBLE
         recommendationsList = findViewById(R.id.recommendations_list)
+        val makePlaylistButton: Button = findViewById(R.id.make_playlist_button)
+        makePlaylistButton.setOnClickListener {
+            makePlaylistOf(recommendedSongs, playlistName)
+        }
         recommendationsList.layoutManager = LinearLayoutManager(this)
 
         getAllSongsAsync(playlistId).invokeOnCompletion {
-            generatePlaylist(songs)
+            generatePlaylist(sourceSongs)
         }
     }
 
@@ -48,11 +66,11 @@ class GeneratePlaylistActivity : AppCompatActivity() {
         getIdJob.join()
         do {
             val getSongsJob = launch {
-                pager = spotify.getPlaylistTracks(userId, playlistId, mapOf(Pair("offset", songs.size)))
-                songs.addAll(pager.items)
+                pager = spotify.getPlaylistTracks(userId, playlistId, mapOf(Pair("offset", sourceSongs.size)))
+                sourceSongs.addAll(pager.items)
             }
             getSongsJob.join()
-        } while (pager.total > songs.size)
+        } while (pager.total > sourceSongs.size)
     }
 
     private fun generatePlaylist(songs: List<PlaylistTrack>) = GlobalScope.launch {
@@ -64,17 +82,20 @@ class GeneratePlaylistActivity : AppCompatActivity() {
 
         val seedArtists = mostFreqArtists.shuffled().subList(0, numArtists).joinToString(",")
         val seedTracks = someSongs.subList(0, numSongs).joinToString(",")
-        spotify.getRecommendations(mapOf(Pair("seed_artists", seedArtists), Pair("seed_tracks", seedTracks)),
+        spotify.getRecommendations(
+            mapOf(
+                Pair("seed_artists", seedArtists),
+                Pair("seed_tracks", seedTracks),
+                Pair("limit", 50)
+            ),
             object : Callback<Recommendations> {
                 override fun success(rec: Recommendations, response: Response) {
-                    recommendationsList.adapter = SongAdapter(rec.tracks)
-                    (recommendationsList.adapter as SongAdapter).notifyDataSetChanged()
-                    loadingProgressBar.visibility = ProgressBar.GONE
+                    recommendedSongs = rec.tracks
                 }
 
                 override fun failure(error: RetrofitError) {
                     Log.e("spotify", "failed to get recommendations", error)
-                    loadingProgressBar.visibility = ProgressBar.GONE
+                    recommendedSongs = mutableListOf()
                 }
             })
     }
@@ -99,5 +120,53 @@ class GeneratePlaylistActivity : AppCompatActivity() {
             .toList() //makes a list of pairs which can be decomposed as (key, value)
             .sortedBy { (_, value) -> value }
             .map { (key, _) -> key }.subList(0, mapLengthLimit)
+    }
+
+    private fun makePlaylistOf(songs: List<Track>, name: String) = GlobalScope.launch {
+        val userId = spotify.me.id
+        try {
+
+            val playlistId = spotify.createPlaylist(userId, mapOf(Pair("name", name))).id
+            spotify.addTracksToPlaylist(
+                userId,
+                playlistId,
+                mapOf(), //query params
+                mapOf(Pair("uris", songs.map { it.uri }))
+            )
+            openInSpotify(playlistId)
+        } catch (e: RetrofitError) {
+            Log.d("FOO", "something went wrong", SpotifyError.fromRetrofitError(e))
+        }
+    }
+
+    private fun openInSpotify(playlistId: String) {
+        try {
+            val openInSpotifyIntent = Intent(Intent.ACTION_VIEW)
+            openInSpotifyIntent.data = Uri.parse("spotify:playlist:$playlistId")
+            openInSpotifyIntent.putExtra(
+                Intent.EXTRA_REFERRER,
+                Uri.parse("android-app://$packageName")
+            )
+            startActivity(openInSpotifyIntent)
+        } catch (e: ActivityNotFoundException) {
+            val appPackageName = "com.spotify.music"
+            val referrer = "adjust_campaign=$packageName&adjust_tracker=ndjczk&utm_source=adjust_preinstall"
+            try {
+                val uri = Uri.parse("market://details")
+                    .buildUpon()
+                    .appendQueryParameter("id", appPackageName)
+                    .appendQueryParameter("referrer", referrer)
+                    .build()
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+            } catch (ignored: ActivityNotFoundException) {
+                val uri = Uri.parse("https://play.google.com/store/apps/details")
+                    .buildUpon()
+                    .appendQueryParameter("id", appPackageName)
+                    .appendQueryParameter("referrer", referrer)
+                    .build()
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+            }
+
+        }
     }
 }

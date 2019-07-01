@@ -24,4 +24,5 @@
   <string name="makePlaylist">Make Playlist</string>
   <string name="selectArtist">Search Artists</string>
   <string name="select_playlist">Select one of your playlists to start</string>
+  <string name="preview">Preview</string>
 </resources>
