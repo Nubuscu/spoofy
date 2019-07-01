@@ -19,7 +19,13 @@ class SpotifyAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val builder = AuthenticationRequest.Builder(client_id, AuthenticationResponse.Type.TOKEN, redirect_url)
-        val scopes = arrayOf("user-library-read", "playlist-read-private", "user-read-recently-played", "user-top-read")
+        val scopes = arrayOf(
+            "user-library-read",
+            "user-read-recently-played",
+            "playlist-read-private", // read all playlists
+            "user-top-read", // for metrics page(s)
+            "playlist-modify-public" // to create a playlist from recommendations
+        )
         builder.setScopes(scopes)
 
         val request = builder.build()

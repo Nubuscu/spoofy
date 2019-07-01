@@ -1,5 +1,6 @@
 package me.nubuscu.spoofy
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -29,7 +30,9 @@ class RecommendationsFragment : Fragment() {
         val playlistList: RecyclerView = view.findViewById(R.id.playlistList)
         val layoutManager = LinearLayoutManager(activity)
         val playlistAdapter = PlaylistAdapter(mutableListOf()) { selected ->
-            //TODO congrats
+            val generatePlaylistIntent = Intent(activity, GeneratePlaylistActivity::class.java)
+            generatePlaylistIntent.putExtra("playlistId", selected.id)
+            startActivity(generatePlaylistIntent)
         }
         val playlistsCallback = object : Callback<Pager<PlaylistSimple>> {
             override fun success(pager: Pager<PlaylistSimple>?, response: Response?) {
