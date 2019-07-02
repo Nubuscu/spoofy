@@ -25,4 +25,5 @@
   <string name="selectArtist">Search Artists</string>
   <string name="select_playlist">Select one of your playlists to start</string>
   <string name="preview">Preview</string>
+  <string name="playlist_name_hint">Playlist name goes here</string>
 </resources>

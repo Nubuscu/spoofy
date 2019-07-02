@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import kaaes.spotify.webapi.android.SpotifyError
 import kaaes.spotify.webapi.android.models.Pager
 import kaaes.spotify.webapi.android.models.PlaylistTrack
@@ -25,7 +27,6 @@ import retrofit.client.Response
 import kotlin.random.Random
 
 class GeneratePlaylistActivity : AppCompatActivity() {
-    private val playlistName = "Spoofy loves you too"
     private val spotify = DataManager.instance.spotify
     private val sourceSongs: MutableList<PlaylistTrack> = mutableListOf() //accumulate all the songs in the playlist
     private var recommendedSongs: MutableList<Track> = mutableListOf()
@@ -37,6 +38,7 @@ class GeneratePlaylistActivity : AppCompatActivity() {
         }
     private lateinit var recommendationsList: RecyclerView
     private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var playlistNameText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +47,15 @@ class GeneratePlaylistActivity : AppCompatActivity() {
         loadingProgressBar = findViewById(R.id.gp_progress_bar)
         loadingProgressBar.visibility = ProgressBar.VISIBLE
         recommendationsList = findViewById(R.id.recommendations_list)
+        playlistNameText = findViewById(R.id.playlistNameText)
         val makePlaylistButton: Button = findViewById(R.id.make_playlist_button)
         makePlaylistButton.setOnClickListener {
-            makePlaylistOf(recommendedSongs, playlistName)
+            val name = playlistNameText.text.toString()
+            if (name != "") {
+                makePlaylistOf(recommendedSongs, name)
+            } else {
+                Toast.makeText(this, "Please enter a name for your new playlist", Toast.LENGTH_LONG).show()
+            }
         }
         recommendationsList.layoutManager = LinearLayoutManager(this)
 
@@ -123,6 +131,7 @@ class GeneratePlaylistActivity : AppCompatActivity() {
     }
 
     private fun makePlaylistOf(songs: List<Track>, name: String) = GlobalScope.launch {
+
         val userId = spotify.me.id
         try {
 
