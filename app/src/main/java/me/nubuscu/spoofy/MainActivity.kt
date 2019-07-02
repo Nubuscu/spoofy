@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mDrawer: DrawerLayout
     private lateinit var toolbar: Toolbar
     private lateinit var nvDrawer: NavigationView
+    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +38,17 @@ class MainActivity : AppCompatActivity() {
         //setup toolbar but only if it exists
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             toolbar = findViewById(R.id.toolbar)
-            setSupportActionBar(toolbar)
             mDrawer = findViewById(R.id.drawer_layout)
             nvDrawer = findViewById(R.id.nvView)
+            setSupportActionBar(toolbar)
+            toggle = ActionBarDrawerToggle(
+                this,
+                mDrawer,
+                toolbar,
+                R.string.open_nav_drawer_desc,
+                R.string.close_nav_drawer_desc
+            )
+            mDrawer.addDrawerListener(toggle)
 
             setupDrawerContent(nvDrawer)
             openFragment(MetricsFragment::class.java.newInstance() as Fragment)
@@ -86,4 +96,15 @@ class MainActivity : AppCompatActivity() {
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
 
     }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        toggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        toggle.onConfigurationChanged(newConfig)
+    }
+
 }

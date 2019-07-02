@@ -26,4 +26,6 @@
   <string name="select_playlist">Select one of your playlists to start</string>
   <string name="preview">Preview</string>
   <string name="playlist_name_hint">Playlist name goes here</string>
+  <string name="open_nav_drawer_desc">open nav drawer</string>
+  <string name="close_nav_drawer_desc">close nav drawer</string>
 </resources>
