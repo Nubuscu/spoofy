@@ -43,6 +43,7 @@ class SpotifyAuthActivity : AppCompatActivity() {
                     openMainIntent.putExtra("spotifyToken", response.accessToken)
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                     startActivity(openMainIntent)
+                    finish()
                 }
                 AuthenticationResponse.Type.ERROR -> {
                     Log.e("auth", "failed to get token")
