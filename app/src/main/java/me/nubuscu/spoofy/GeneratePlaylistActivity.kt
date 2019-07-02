@@ -24,6 +24,7 @@ import me.nubuscu.spoofy.view.SongAdapter
 import retrofit.Callback
 import retrofit.RetrofitError
 import retrofit.client.Response
+import kotlin.math.min
 import kotlin.random.Random
 
 class GeneratePlaylistActivity : AppCompatActivity() {
@@ -60,7 +61,11 @@ class GeneratePlaylistActivity : AppCompatActivity() {
         recommendationsList.layoutManager = LinearLayoutManager(this)
 
         getAllSongsAsync(playlistId).invokeOnCompletion {
-            generatePlaylist(sourceSongs)
+            if (sourceSongs.size > 0) {
+                generatePlaylist(sourceSongs)
+            } else {
+                finish()
+            }
         }
     }
 
@@ -83,10 +88,10 @@ class GeneratePlaylistActivity : AppCompatActivity() {
 
     private fun generatePlaylist(songs: List<PlaylistTrack>) = GlobalScope.launch {
         val numSeedObjects = 5
-        val mostFreqArtists = mostFrequentArtists(songs, 0, 5)
-        val someSongs: List<String> = songs.map { it.track.id }.shuffled().subList(0, 5)
-        val numArtists: Int = Random.nextInt(0, numSeedObjects)
-        val numSongs = numSeedObjects - numArtists
+        val mostFreqArtists = mostFrequentArtists(songs, 1, 5)
+        val someSongs: List<String> = songs.map { it.track.id }.shuffled().subList(0, min(numSeedObjects, songs.size))
+        val numArtists: Int = Random.nextInt(0, min(numSeedObjects, mostFreqArtists.size))
+        val numSongs = min(someSongs.size, numSeedObjects - numArtists)
 
         val seedArtists = mostFreqArtists.shuffled().subList(0, numArtists).joinToString(",")
         val seedTracks = someSongs.subList(0, numSongs).joinToString(",")
@@ -123,11 +128,12 @@ class GeneratePlaylistActivity : AppCompatActivity() {
                 artistFrequency[artist.id] = artistFrequency.getOrPut(artist.id, { 0 }) + 1
             }
         }
-        return artistFrequency
+        val ids = artistFrequency
             .filter { it.value >= freqLimit }
             .toList() //makes a list of pairs which can be decomposed as (key, value)
             .sortedBy { (_, value) -> value }
-            .map { (key, _) -> key }.subList(0, mapLengthLimit)
+            .map { (key, _) -> key }
+        return ids.subList(0, Math.min(ids.size, mapLengthLimit))
     }
 
     private fun makePlaylistOf(songs: List<Track>, name: String) = GlobalScope.launch {
