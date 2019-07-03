@@ -15,6 +15,9 @@ import me.nubuscu.spoofy.utils.DataManager
 import java.lang.ref.WeakReference
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var selectedFragment: Class<*> = MetricsFragment::class.java
+    }
     //    spotify deps
     private lateinit var token: String
     //    nav bar things
@@ -35,24 +38,22 @@ class MainActivity : AppCompatActivity() {
         DataManager.instance.spotify = api.service
         DataManager.instance.context = WeakReference(this)
 
-        //setup toolbar but only if it exists
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            toolbar = findViewById(R.id.toolbar)
-            mDrawer = findViewById(R.id.drawer_layout)
-            nvDrawer = findViewById(R.id.nvView)
-            setSupportActionBar(toolbar)
-            toggle = ActionBarDrawerToggle(
-                this,
-                mDrawer,
-                toolbar,
-                R.string.open_nav_drawer_desc,
-                R.string.close_nav_drawer_desc
-            )
-            mDrawer.addDrawerListener(toggle)
+        toolbar = findViewById(R.id.toolbar)
+        mDrawer = findViewById(R.id.drawer_layout)
+        nvDrawer = findViewById(R.id.nvView)
+        setSupportActionBar(toolbar)
+        toggle = ActionBarDrawerToggle(
+            this,
+            mDrawer,
+            toolbar,
+            R.string.open_nav_drawer_desc,
+            R.string.close_nav_drawer_desc
+        )
+        mDrawer.addDrawerListener(toggle)
 
-            setupDrawerContent(nvDrawer)
-            openFragment(MetricsFragment::class.java.newInstance() as Fragment)
-        }
+        setupDrawerContent(nvDrawer)
+        openFragment(selectedFragment.newInstance() as Fragment)
+
     }
 
 
@@ -77,15 +78,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectDrawerItem(item: MenuItem?) {
-        //default to metrics page
-        var fragmentClass: Class<*> = MetricsFragment::class.java
-        when (item!!.itemId) {
-            R.id.nav_metrics_fragment -> fragmentClass = MetricsFragment::class.java
-            R.id.nav_discover_map -> fragmentClass = NetworkFragment::class.java
-            R.id.nav_recommendations_fragment -> fragmentClass = RecommendationsFragment::class.java
+        selectedFragment = when (item!!.itemId) {
+            R.id.nav_metrics_fragment -> MetricsFragment::class.java
+            R.id.nav_discover_map -> NetworkFragment::class.java
+            R.id.nav_recommendations_fragment -> RecommendationsFragment::class.java
+            else -> selectedFragment // do nothing if confused
         }
-        val fragment = fragmentClass.newInstance() as Fragment
-        openFragment(fragment)
+
+        openFragment(selectedFragment.newInstance() as Fragment)
 
         item.isChecked = true
         mDrawer.closeDrawers()
