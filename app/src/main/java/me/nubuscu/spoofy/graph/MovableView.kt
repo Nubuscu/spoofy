@@ -6,7 +6,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import me.nubuscu.spoofy.viewmodel.NetworkViewModel
+import kotlin.math.max
+import kotlin.math.min
 
 open class MovableView(context: Context, attrs: AttributeSet): View(context, attrs) {
 
@@ -23,7 +24,7 @@ open class MovableView(context: Context, attrs: AttributeSet): View(context, att
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             mScaleFactor *= detector.scaleFactor
 
-            mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f))
+            mScaleFactor = max(0.5f, min(mScaleFactor, 3.0f))
 
             invalidate()
             return true
@@ -67,7 +68,7 @@ open class MovableView(context: Context, attrs: AttributeSet): View(context, att
         canvas?.apply {
             save()
             translate(mPosX, mPosY)
-            scale(mScaleFactor, mScaleFactor)
+            scale(mScaleFactor, mScaleFactor, width / 2f, height / 2f)
             onDrawFunction(canvas, mScaleFactor)
             restore()
         }

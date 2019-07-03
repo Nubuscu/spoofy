@@ -4,6 +4,9 @@ import android.graphics.Canvas
 import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.sin
 
 class ArtistNetwork {
 
@@ -24,18 +27,26 @@ class ArtistNetwork {
         val hasBeenDrawn: MutableSet<ArtistNode> = HashSet()
         val centreX = canvas.width / 2
         val centreY = canvas.height / 2
+        val initialRadius = (max(canvas.width, canvas.height) * 7f / 16f).toInt()
         centralNode!!.draw(canvas, centreX, centreY, scaleFactor)
         hasBeenDrawn.add(centralNode!!)
         for (node in hasBeenDrawn) {
-            drawRing(canvas, node.adjacentNodes, hasBeenDrawn, Pair(node.x, node.y), scaleFactor, 300)
+            drawRing(canvas, node.adjacentNodes, hasBeenDrawn, Pair(node.x, node.y), scaleFactor, initialRadius)
             for (adj in node.adjacentNodes) {
                 Edge(adj.node, node.node, canvas).draw()
             }
         }
     }
 
-    fun drawRing(canvas: Canvas, toDraw: Set<ArtistNode>, beenDrawn: MutableSet<ArtistNode>, centreLocation: Pair<Int, Int>, scaleFactor: Float, radius: Int) {
-        for ((artist, loc) in toDraw zip  makeCoOrds(centreLocation.first, centreLocation.second, toDraw.size, radius)) {
+    fun drawRing(
+        canvas: Canvas,
+        toDraw: Set<ArtistNode>,
+        beenDrawn: MutableSet<ArtistNode>,
+        centreLocation: Pair<Int, Int>,
+        scaleFactor: Float,
+        radius: Int
+    ) {
+        for ((artist, loc) in toDraw zip makeCoOrds(centreLocation.first, centreLocation.second, toDraw.size, radius)) {
             if (artist !in beenDrawn) {
                 artist.draw(canvas, loc.first, loc.second, scaleFactor)
                 beenDrawn.add(artist)
@@ -56,8 +67,8 @@ class ArtistNetwork {
     }
 
     private fun makeCoOrd(baseX: Int, baseY: Int, i: Int, numPoints: Int, radius: Int): Pair<Int, Int> {
-        val x = baseX + radius * Math.cos(2 * Math.PI * i / numPoints)
-        val y = baseY + radius * Math.sin(2 * Math.PI * i / numPoints)
+        val x = baseX + radius * cos(2 * Math.PI * i / numPoints)
+        val y = baseY + radius * sin(2 * Math.PI * i / numPoints)
         return Pair(x.toInt(), y.toInt())
 
     }
