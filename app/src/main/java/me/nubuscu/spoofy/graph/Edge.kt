@@ -4,11 +4,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import me.nubuscu.spoofy.R
+import me.nubuscu.spoofy.utils.DataManager
 
-class Edge(val start: Node, val end: Node, val canvas: Canvas) : Path() {
+class Edge(private val start: Node, private val end: Node, private val canvas: Canvas) : Path() {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = Color.BLUE
+        color = DataManager.instance.context.get()?.getColor(R.color.purple_dark) ?: Color.BLACK
         strokeWidth = 5.0F
     }
 

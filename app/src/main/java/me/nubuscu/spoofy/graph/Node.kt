@@ -11,12 +11,12 @@ open class Node(x: Int = 0, y: Int = 0, val label: String, val canvas: Canvas) :
     private val resources = DataManager.instance.context.get()?.resources
     private val shapePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.DKGRAY
+        color = DataManager.instance.context.get()?.getColor(R.color.purple) ?: Color.BLACK
     }
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.BLACK
-        textSize = resources?.getDimension(R.dimen.graphFontSize) ?: 36f  // TODO find a way to get dimension resources without context
+        color = DataManager.instance.context.get()?.getColor(R.color.spotifyWhite) ?: Color.BLACK
+        textSize = resources?.getDimension(R.dimen.graphFontSize) ?: 36f
         textAlign = Paint.Align.CENTER
     }
 

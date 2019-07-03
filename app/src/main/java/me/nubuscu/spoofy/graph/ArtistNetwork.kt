@@ -26,12 +26,11 @@ class ArtistNetwork {
         val centreY = canvas.height / 2
         centralNode!!.draw(canvas, centreX, centreY, scaleFactor)
         hasBeenDrawn.add(centralNode!!)
-        // TODO generate a series of co-ordinates to draw other nodes at
         for (node in hasBeenDrawn) {
             drawRing(canvas, node.adjacentNodes, hasBeenDrawn, Pair(node.x, node.y), scaleFactor, 300)
-//            for (adj in node.adjacentNodes) {
-//                Edge(adj.node, node.node, canvas).draw()
-//            }
+            for (adj in node.adjacentNodes) {
+                Edge(adj.node, node.node, canvas).draw()
+            }
         }
     }
 
